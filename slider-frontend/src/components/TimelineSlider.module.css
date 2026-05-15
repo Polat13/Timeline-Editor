@@ -1,0 +1,284 @@
+.timeline-slider-shell {
+  --timeline-progress: 0;
+  box-sizing: border-box;
+  position: relative;
+  display: grid;
+  width: min(100%, 1800px);
+  margin-inline: auto;
+  overflow: hidden;
+  padding: 0 clamp(12px, 2.5vw, 56px) clamp(14px, 1.4vw, 28px);
+  gap: clamp(8px, 0.75vw, 16px);
+  outline: none;
+}
+
+.timeline-orbit-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(96px, 6.8vw, 132px);
+  overflow: hidden;
+  cursor: ew-resize;
+  outline: none;
+  touch-action: none;
+
+  /* Siyah kenarlıkları sildik, sadece ortadaki ışıltı kaldı */
+  background: radial-gradient(ellipse at 50% 10%,
+      rgb(34 211 238 / 0.08),
+      transparent 56%);
+}
+
+.timeline-orbit-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.timeline-orbit-shadow,
+.timeline-orbit-track,
+.timeline-orbit-progress {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.timeline-orbit-shadow {
+  stroke: rgb(14 165 233 / 0.1);
+  stroke-width: clamp(20px, 1.7vw, 30px);
+}
+
+.timeline-orbit-track {
+  stroke: rgb(113 113 122 / 0.5);
+  stroke-width: clamp(2px, 0.18vw, 3px);
+}
+
+.timeline-orbit-progress {
+  stroke: rgb(103 232 249 / 0.9);
+  stroke-width: clamp(3px, 0.22vw, 4px);
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--timeline-progress));
+  filter: drop-shadow(0 0 12px rgb(34 211 238 / 0.65));
+  transition: stroke-dashoffset 720ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.timeline-slider-shell.is-block-shifting .timeline-orbit-progress {
+  transition-duration: 2200ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-orbit-tick,
+.timeline-orbit-cursor {
+  position: absolute;
+  pointer-events: none;
+}
+
+.timeline-orbit-tick {
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(34px, 3vw, 52px);
+  height: clamp(42px, 3.2vw, 58px);
+  color: rgb(113 113 122);
+  transition:
+    left 720ms cubic-bezier(0.22, 1, 0.36, 1),
+    top 720ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 720ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 360ms ease;
+}
+
+.timeline-slider-shell.is-block-shifting .timeline-orbit-tick {
+  transition-duration: 2200ms, 2200ms, 2200ms, 900ms;
+  transition-timing-function:
+    cubic-bezier(0.16, 1, 0.3, 1),
+    cubic-bezier(0.16, 1, 0.3, 1),
+    cubic-bezier(0.16, 1, 0.3, 1),
+    ease;
+}
+
+.timeline-orbit-tick-line {
+  display: block;
+  width: 2px;
+  height: clamp(22px, 1.8vw, 32px);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg,
+      transparent,
+      currentColor 18%,
+      currentColor 82%,
+      transparent);
+  box-shadow: 0 0 0 transparent;
+  transition:
+    width 360ms ease,
+    height 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 360ms ease,
+    box-shadow 520ms ease;
+}
+
+.timeline-orbit-tick.is-past {
+  color: rgb(6 182 212);
+}
+
+.timeline-orbit-tick.is-active {
+  color: rgb(165 243 252);
+}
+
+.timeline-orbit-tick.is-active .timeline-orbit-tick-line {
+  width: clamp(3px, 0.24vw, 4px);
+  height: clamp(34px, 3vw, 52px);
+  box-shadow: 0 0 18px rgb(34 211 238 / 0.95);
+}
+
+.timeline-orbit-cursor {
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(30px, 2.5vw, 42px);
+  height: clamp(52px, 4vw, 76px);
+  transition:
+    left 760ms cubic-bezier(0.22, 1, 0.36, 1),
+    top 760ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 760ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.timeline-slider-shell.is-block-shifting .timeline-orbit-cursor {
+  transition-duration: 2300ms, 2300ms, 2300ms;
+  transition-timing-function:
+    cubic-bezier(0.16, 1, 0.3, 1),
+    cubic-bezier(0.16, 1, 0.3, 1),
+    cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-orbit-cursor-core {
+  display: block;
+  width: clamp(6px, 0.45vw, 9px);
+  height: clamp(48px, 3.5vw, 68px);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg,
+      rgb(255 255 255),
+      rgb(103 232 249) 55%,
+      rgb(14 165 233));
+  box-shadow:
+    0 0 20px rgb(34 211 238 / 0.95),
+    0 0 2px rgb(255 255 255);
+  transition:
+    height 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 520ms ease;
+}
+
+.timeline-range-input {
+  position: absolute;
+  z-index: 3;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.timeline-range-input::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.timeline-range-input::-webkit-slider-thumb {
+  width: 44px;
+  height: 44px;
+  appearance: none;
+}
+
+.timeline-range-input::-moz-range-track {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.timeline-range-input::-moz-range-thumb {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+}
+
+.timeline-step-label {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 0.7vw, 12px);
+  padding: clamp(4px, 0.35vw, 7px) clamp(10px, 0.85vw, 16px);
+  border: 1px solid rgb(63 63 70 / 0.9);
+  border-radius: 999px;
+  background: rgb(9 9 11 / 0.78);
+  color: rgb(212 212 216);
+  font-size: clamp(12px, 0.72vw, 14px);
+  line-height: 1.5;
+  box-shadow: 0 10px 28px rgb(0 0 0 / 0.22);
+}
+
+.timeline-step-label span+span {
+  position: relative;
+  color: rgb(161 161 170);
+}
+
+.timeline-step-label span+span::before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: clamp(10px, 0.65vw, 13px);
+  background: rgb(63 63 70);
+  margin-inline-end: clamp(8px, 0.7vw, 12px);
+  vertical-align: -1px;
+}
+
+@media (min-width: 1280px) {
+  .timeline-slider-shell {
+    width: min(100%, 1880px);
+    padding-inline: clamp(48px, 5vw, 120px);
+  }
+
+  .timeline-orbit-stage {
+    height: clamp(112px, 6.2vw, 148px);
+  }
+}
+
+@media (min-width: 1920px) {
+  .timeline-slider-shell {
+    width: min(100%, 2040px);
+    padding-inline: clamp(96px, 6vw, 168px);
+  }
+
+  .timeline-orbit-stage {
+    height: clamp(126px, 5.8vw, 166px);
+  }
+}
+
+@media (max-width: 640px) {
+  .timeline-slider-shell {
+    padding-inline: 0;
+  }
+
+  .timeline-orbit-tick {
+    width: 34px;
+  }
+
+  .timeline-orbit-tick-line {
+    height: 22px;
+  }
+
+  .timeline-orbit-tick.is-active .timeline-orbit-tick-line {
+    height: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .timeline-orbit-progress,
+  .timeline-orbit-tick,
+  .timeline-orbit-tick-line,
+  .timeline-orbit-cursor,
+  .timeline-orbit-cursor-core {
+    transition-duration: 1ms;
+  }
+}
